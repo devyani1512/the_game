@@ -11,6 +11,4 @@ const gameSessionSchema = new Schema({
   turn: { type: String, enum: ['user', 'computer'], default: 'user' },
   timer: { type: Date, default: null }  // Store the timestamp of the end of the user's turn
 });
-
-
 module.exports = mongoose.model('GameSession', gameSessionSchema);

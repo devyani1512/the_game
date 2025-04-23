@@ -62,6 +62,7 @@ router.post('/start-game', async (req, res) => {
   }
 });
 
+
 router.post('/submit-place', async (req, res) => {
   const { userId, place } = req.body;
   const session = await GameSession.findOne({ userId, isOver: false });
@@ -79,7 +80,9 @@ router.post('/submit-place', async (req, res) => {
     return res.status(400).json({ error: `Place must start with "${session.currentLetter.toUpperCase()}"` });
   }
 
-  const valid = await Place.findOne({ name: new RegExp('^' + place + '$', 'i') });
+  // const valid = await Place.findOne({ name: new RegExp('^' + place + '$', 'i') });
+  const valid = await Place.findOne({ name: { $regex: `^${inputPlace}$`, $options: 'i' } });
+
   if (!valid) return res.status(400).json({ error: 'Place not found in database.' });
 
   session.usedPlaces.push(inputPlace);
@@ -162,5 +165,11 @@ router.post('/pass', async (req, res) => {
     gameOver: false
   });
 });
+router.post('/logout', (req, res) => {
+  // If you were using sessions: req.session.destroy();
+  // If JWT, the client should simply delete the token (nothing to do here).
+  res.status(200).json({ message: 'Logout successful' });
+});
+
 
 module.exports = router;

@@ -3,30 +3,40 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const mongoose = require('mongoose');
 const Place = require('./models/Place');
-require('../db'); // ✅ Reuses your existing db connection
+const connectDB = require('./db');
 
 const cities = [];
 
 fs.createReadStream('/Users/suryanshsharmaa/Desktop/fold/chatsystem/backend/worldcities(1).csv')
-  .pipe(csv())
+  .pipe(csv({
+    headers: [
+      'asciiName', 'nativeName', 'lat', 'lng', 'country',
+      'iso2', 'iso3', 'adminRegion', 'capitalStatus',
+      'population', 'id'
+    ],
+    skipLines: 0,
+  }))
   .on('data', (row) => {
-    if (row.city && row.country) {
+    if (row.nativeName && row.country) {
       cities.push({
-        name: row.city,
+        name: row.nativeName.trim(), // Use nativeName as the place name
         type: 'city',
-        country: row.country,
+        country: row.country.trim(),
       });
     }
   })
   .on('end', async () => {
     try {
+      await connectDB();
       await Place.deleteMany({ type: 'city' });
       await Place.insertMany(cities);
-      console.log('✅ Cities seeded successfully');
-      mongoose.connection.close(); // ✅ Close cleanly
+      console.log(`✅ ${cities.length} cities seeded successfully`);
     } catch (err) {
       console.error('❌ Seeding failed:', err);
+    } finally {
       mongoose.connection.close();
-      process.exit(1);
     }
+  })
+  .on('error', (err) => {
+    console.error('❌ CSV parsing failed:', err);
   });
