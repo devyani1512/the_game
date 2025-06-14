@@ -1,0 +1,26 @@
+.input-row {
+  display: flex;
+  gap: 1rem; /* horizontal spacing between input and button */
+  margin-bottom: 1.5rem; /* vertical spacing between rows */
+  justify-content: center;
+  align-items: center;
+}
+
+.input-row input,
+.input-row button {
+  padding: 12px 18px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.input-row button {
+  background-color: #e6e6e6;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.input-row button:hover {
+  background-color: #d4d4d4;
+}

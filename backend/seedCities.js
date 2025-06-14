@@ -7,21 +7,15 @@ const connectDB = require('./db');
 
 const cities = [];
 
-fs.createReadStream('/Users/suryanshsharmaa/Desktop/fold/chatsystem/backend/worldcities(1).csv')
-  .pipe(csv({
-    headers: [
-      'asciiName', 'nativeName', 'lat', 'lng', 'country',
-      'iso2', 'iso3', 'adminRegion', 'capitalStatus',
-      'population', 'id'
-    ],
-    skipLines: 0,
-  }))
+fs.createReadStream('/Users/suryanshsharmaa/Desktop/fold/chatsystem/backend/CITY.CSV')
+  .pipe(csv())
   .on('data', (row) => {
-    if (row.nativeName && row.country) {
+    const cityName = row.city || row.city_ascii || row.nativeName;
+    if (cityName && row.country) {
       cities.push({
-        name: row.nativeName.trim(), // Use nativeName as the place name
+        name: cityName.trim(),
         type: 'city',
-        country: row.country.trim(),
+        country: row.country.trim()
       });
     }
   })
@@ -29,6 +23,10 @@ fs.createReadStream('/Users/suryanshsharmaa/Desktop/fold/chatsystem/backend/worl
     try {
       await connectDB();
       await Place.deleteMany({ type: 'city' });
+
+      // Preview what you're inserting
+      console.log("Sample city:", cities[0]);
+
       await Place.insertMany(cities);
       console.log(`✅ ${cities.length} cities seeded successfully`);
     } catch (err) {
