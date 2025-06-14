@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Globe from "react-globe.gl";
 import socket from "./socket";
 import GameInterface from "./components/GameInterface";
@@ -13,8 +13,6 @@ const App = () => {
   const [playerName, setPlayerName] = useState("");
   const [players, setPlayers] = useState([]);
   const [usedPlaces, setUsedPlaces] = useState([]);
-
-  const globeEl = useRef();
 
   useEffect(() => {
     socket.on("gameStart", ({ currentLetter, currentPlayer, players }) => {
@@ -46,7 +44,6 @@ const App = () => {
     socket.on("playerPassed", ({ player, auto }) => {
       setStatus(auto ? `⏱️ ${player} auto-passed` : `⏭️ ${player} passed`);
     });
-
     socket.on("usedPlacesUpdate", (places) =>
       setUsedPlaces(places.map((p) => p.toLowerCase()))
     );
@@ -93,12 +90,7 @@ const App = () => {
   return (
     <div className="app-container">
       <div className="globe-container">
-        <div style={{ width: "100%", height: "100%" }}>
-          <Globe
-            ref={globeEl}
-            globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
-          />
-        </div>
+        <Globe globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg" />
       </div>
 
       <div className="form-container">
@@ -133,7 +125,7 @@ const App = () => {
               </p>
             )}
 
-            <p>{status}</p>
+            <p className="status">{status}</p>
           </>
         ) : (
           <>
@@ -143,7 +135,7 @@ const App = () => {
               currentPlayer={currentPlayer}
               usedPlaces={usedPlaces}
             />
-            <p>{status}</p>
+            <p className="status">{status}</p>
           </>
         )}
       </div>
@@ -152,4 +144,3 @@ const App = () => {
 };
 
 export default App;
-
