@@ -1,71 +1,83 @@
+/* Fullscreen background and layout */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #000010;
+  font-family: Arial, sans-serif;
+}
+
+/* Layout */
 .app-container {
   display: flex;
   flex-direction: row;
   height: 100vh;
+  width: 100vw;
   overflow: hidden;
-  background-color: #0a0a0a;
-  color: white;
-  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Left side: Globe */
 .globe-container {
-  flex: 1.5;
-  height: 100vh;
-  min-width: 50vw;
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Right side: Form */
 .form-container {
   flex: 1;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
   padding: 2rem;
-/*   background-color: #1c1c1c; */
-  
-  background-color: darkblue; /* Temp debug */
-
-
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
 }
 
-.input-row {
-  margin-bottom: 1.5rem;
-}
-
-input {
+/* Inputs and buttons */
+.input {
   width: 100%;
-  padding: 12px;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+}
+
+.btn {
+  width: 100%;
+  margin-bottom: 2rem;
+  padding: 0.7rem;
   font-size: 1rem;
   border: none;
-  border-radius: 8px;
-  background-color: #2a2a2a;
+  border-radius: 5px;
+  background-color: #4b72ff;
   color: white;
-  margin-bottom: 0.5rem;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  background-color: #00d4ff;
-  border: none;
-  border-radius: 8px;
   cursor: pointer;
-  color: black;
-  transition: 0.2s ease;
+  transition: background-color 0.2s;
 }
 
+.btn:hover {
+  background-color: #2f54d3;
+}
+
+/* Responsive tweaks */
 @media (max-width: 768px) {
   .app-container {
     flex-direction: column;
   }
 
-  .globe-container {
-    height: 40vh;
-    min-width: 100vw;
+  .form-container {
+    width: 100%;
+    align-items: center;
+    text-align: center;
   }
 
-  .form-container {
-    height: 60vh;
-    padding: 1rem;
+  .input, .btn {
+    width: 80%;
   }
 }
+
