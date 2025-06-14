@@ -1,26 +1,67 @@
-.input-row {
+.app-container {
   display: flex;
-  gap: 1rem; /* horizontal spacing between input and button */
-  margin-bottom: 1.5rem; /* vertical spacing between rows */
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0a0a0a;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.globe-container {
+  flex: 1.5;
+  height: 100vh;
+  min-width: 50vw;
+}
+
+.form-container {
+  flex: 1;
+  padding: 2rem;
+  background-color: #1c1c1c;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 
-.input-row input,
-.input-row button {
-  padding: 12px 18px;
+.input-row {
+  margin-bottom: 1.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
   font-size: 1rem;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
+  border: none;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: white;
+  margin-bottom: 0.5rem;
 }
 
-.input-row button {
-  background-color: #e6e6e6;
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #00d4ff;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  color: black;
+  transition: 0.2s ease;
 }
 
-.input-row button:hover {
-  background-color: #d4d4d4;
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .globe-container {
+    height: 40vh;
+    min-width: 100vw;
+  }
+
+  .form-container {
+    height: 60vh;
+    padding: 1rem;
+  }
 }
