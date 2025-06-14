@@ -125,11 +125,14 @@ const styles = {
     fontFamily: 'sans-serif',
   },
   globeContainer: {
-    flex: 2,
-    minWidth: '0', // prevent overflow
+    flex: 1.2,
+    minWidth: '300px',
+    maxWidth: '60vw',
   },
   panel: {
     flex: 1,
+    minWidth: '300px',
+    overflowY: 'auto',
     padding: '2rem',
     display: 'flex',
     flexDirection: 'column',
@@ -170,15 +173,25 @@ const styles = {
   },
 };
 
-// Media query for mobile
+// Responsive fix (injects global style)
 if (typeof window !== 'undefined') {
   const style = document.createElement('style');
   style.innerHTML = `
     @media (max-width: 768px) {
+      body {
+        overflow: auto;
+      }
+
       div[style*="flex-direction: row"] {
         flex-direction: column !important;
       }
-      div[style*="flex: 1"][style*="padding: 2rem"] {
+
+      div[style*="min-width: 300px"] {
+        max-width: 100% !important;
+        min-width: 100% !important;
+      }
+
+      div[style*="padding: 2rem"] {
         padding: 1rem !important;
       }
     }
