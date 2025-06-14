@@ -12,10 +12,12 @@ body, html, #root {
 .app-container {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  min-height: 100vh; /* ✅ Allow content to grow */
   width: 100vw;
-  overflow: hidden;
+  overflow-y: auto;  /* ✅ Allow scrolling */
+  overflow-x: hidden;
 }
+
 
 /* Left side: Globe */
 .globe-container {
