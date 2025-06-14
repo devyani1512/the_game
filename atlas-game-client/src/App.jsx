@@ -8,6 +8,10 @@ const App = () => {
   const [gameCode, setGameCode] = useState("");
   const [status, setStatus] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [winner, setWinner] = useState("");
+  const [reason, setReason] = useState("");
+
   const [currentLetter, setCurrentLetter] = useState("");
   const [currentPlayer, setCurrentPlayer] = useState("");
   const [playerName, setPlayerName] = useState("");
@@ -17,6 +21,9 @@ const App = () => {
   useEffect(() => {
     socket.on("gameStart", ({ currentLetter, currentPlayer, players }) => {
       setGameStarted(true);
+      setGameEnded(false);
+      setWinner("");
+      setReason("");
       setCurrentLetter(currentLetter);
       setCurrentPlayer(currentPlayer);
       setPlayers(players);
@@ -25,6 +32,7 @@ const App = () => {
     });
 
     socket.on("invalidCode", () => setStatus("❌ Invalid game code."));
+
     socket.on("playerJoined", (joinedPlayers) => {
       setPlayers(joinedPlayers);
       setStatus(`👥 Players in lobby: ${joinedPlayers.join(", ")}`);
@@ -44,9 +52,18 @@ const App = () => {
     socket.on("playerPassed", ({ player, auto }) => {
       setStatus(auto ? `⏱️ ${player} auto-passed` : `⏭️ ${player} passed`);
     });
-    socket.on("usedPlacesUpdate", (places) =>
-      setUsedPlaces(places.map((p) => p.toLowerCase()))
-    );
+
+    socket.on("usedPlacesUpdate", (places) => {
+      setUsedPlaces(places.map((p) => p.toLowerCase()));
+    });
+
+    // ✅ Game Over listener
+    socket.on("gameOver", ({ loser, reason }) => {
+      setGameEnded(true);
+      const winPlayer = players.find((p) => p !== loser);
+      setWinner(winPlayer || "Unknown");
+      setStatus(`🏁 Game Over! ${loser} lost. ${winPlayer} wins! 🏆 (${reason})`);
+    });
 
     return () => {
       socket.off("gameStart");
@@ -57,12 +74,13 @@ const App = () => {
       socket.off("letterChanged");
       socket.off("playerPassed");
       socket.off("usedPlacesUpdate");
+      socket.off("gameOver");
     };
-  }, []);
+  }, [players]);
 
   const handleCreate = async () => {
     try {
-      const res = await fetch("https://the-game-q9mr.onrender.com/create-session", {
+      const res = await fetch("http://localhost:3000/create-session", {
         method: "POST",
       });
       const data = await res.json();
@@ -124,8 +142,15 @@ const App = () => {
                 Current: <strong>{players.join(", ")}</strong>
               </p>
             )}
-
-            <p className="status">{status}</p>
+            <p>{status}</p>
+          </>
+        ) : gameEnded ? (
+          <>
+            <h2>🏁 Game Over!</h2>
+            <p>{status}</p>
+            <p>
+              Winner: <strong>{winner}</strong>
+            </p>
           </>
         ) : (
           <>
@@ -135,7 +160,7 @@ const App = () => {
               currentPlayer={currentPlayer}
               usedPlaces={usedPlaces}
             />
-            <p className="status">{status}</p>
+            <p>{status}</p>
           </>
         )}
       </div>
