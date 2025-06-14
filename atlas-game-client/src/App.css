@@ -1,4 +1,4 @@
-/* Fullscreen background and layout */
+/* Global Reset */
 body, html, #root {
   margin: 0;
   padding: 0;
@@ -12,12 +12,10 @@ body, html, #root {
 .app-container {
   display: flex;
   flex-direction: row;
-  min-height: 100vh; /* ✅ Allow content to grow */
+  height: 100vh;
   width: 100vw;
-  overflow-y: auto;  /* ✅ Allow scrolling */
-  overflow-x: hidden;
+  overflow: hidden;
 }
-
 
 /* Left side: Globe */
 .globe-container {
@@ -25,6 +23,9 @@ body, html, #root {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;         /* Ensures full-height */
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 /* Right side: Form */
@@ -35,12 +36,13 @@ body, html, #root {
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
+  overflow-y: auto;
 }
 
 /* Inputs and buttons */
-.input {
+.input, input {
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.5rem;
@@ -49,7 +51,7 @@ body, html, #root {
   border: none;
 }
 
-.btn {
+.btn, button {
   width: 100%;
   margin-bottom: 2rem;
   padding: 0.7rem;
@@ -62,7 +64,7 @@ body, html, #root {
   transition: background-color 0.2s;
 }
 
-.btn:hover {
+button:hover {
   background-color: #2f54d3;
 }
 
@@ -72,8 +74,13 @@ body, html, #root {
     flex-direction: column;
   }
 
+  .globe-container {
+    height: 50vh;
+  }
+
   .form-container {
     width: 100%;
+    height: 50vh;
     align-items: center;
     text-align: center;
   }
