@@ -80,16 +80,18 @@ export default function GamePage() {
   return (
     <div style={styles.container}>
       <div style={styles.globeContainer}>
-        <Globe
-          ref={globeEl}
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-          pointsData={placePins}
-          pointLat={(d) => d.lat}
-          pointLng={(d) => d.lng}
-          pointColor={() => 'red'}
-          pointAltitude={0.02}
-          pointLabel={(d) => d.name}
-        />
+        <div style={{ width: '100%', height: '80vh' }}>
+          <Globe
+            ref={globeEl}
+            globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+            pointsData={placePins}
+            pointLat={(d) => d.lat}
+            pointLng={(d) => d.lng}
+            pointColor={() => 'red'}
+            pointAltitude={0.02}
+            pointLabel={(d) => d.name}
+          />
+        </div>
       </div>
 
       <div style={styles.panel}>
@@ -123,16 +125,19 @@ const styles = {
     backgroundColor: '#121212',
     color: '#fff',
     fontFamily: 'sans-serif',
+    overflow: 'hidden',
   },
   globeContainer: {
     flex: 1.2,
-    minWidth: '300px',
     maxWidth: '60vw',
+    height: '100vh',
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   panel: {
     flex: 1,
-    minWidth: '300px',
-    overflowY: 'auto',
     padding: '2rem',
     display: 'flex',
     flexDirection: 'column',
@@ -173,28 +178,19 @@ const styles = {
   },
 };
 
-// Responsive fix (injects global style)
+// Media query for mobile
 if (typeof window !== 'undefined') {
   const style = document.createElement('style');
   style.innerHTML = `
     @media (max-width: 768px) {
-      body {
-        overflow: auto;
-      }
-
       div[style*="flex-direction: row"] {
         flex-direction: column !important;
       }
-
-      div[style*="min-width: 300px"] {
-        max-width: 100% !important;
-        min-width: 100% !important;
-      }
-
-      div[style*="padding: 2rem"] {
+      div[style*="flex: 1"][style*="padding: 2rem"] {
         padding: 1rem !important;
       }
     }
   `;
   document.head.appendChild(style);
 }
+
