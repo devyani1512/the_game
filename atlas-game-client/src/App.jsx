@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import Globe from "react-globe.gl";
+import Globe from "react-globe.gl";
 import socket from "./socket";
 import GameInterface from "./components/GameInterface";
 import './App.css'; // include CSS styles
