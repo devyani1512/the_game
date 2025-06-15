@@ -1,3 +1,50 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import requests
+import os
+
+app = Flask(__name__)
+CORS(app)  # ✅ Allow requests from other domains (like your Node.js backend)
+
+@app.route('/validate', methods=['POST'])
+def validate_place():
+    data = request.get_json()
+    place = data.get('place')
+
+    if not place:
+        return jsonify({"error": "No place provided"}), 400
+
+    try:
+        print(f"🔍 Validating place: {place}")
+        url = "https://en.wikipedia.org/w/api.php"
+        params = {
+            "action": "query",
+            "titles": place,
+            "format": "json"
+        }
+
+        response = requests.get(url, params=params)
+        data = response.json()
+
+        pages = data.get("query", {}).get("pages", {})
+        page_id = next(iter(pages))
+
+        valid = page_id != "-1"
+
+        return jsonify({
+            "place": place,
+            "valid": valid,
+            "source": "Wikipedia"
+        })
+
+    except Exception as e:
+        print(f"❌ Exception occurred: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))  # ✅ Required by Render
+    app.run(host='0.0.0.0', port=port)
+
 # from flask import Flask, request, jsonify
 # import undetected_chromedriver as uc
 # from selenium.webdriver.common.by import By
@@ -59,45 +106,45 @@
 
 # if __name__ == '__main__':
 #     app.run(port=5001)
-from flask import Flask, request, jsonify
-import requests
+# from flask import Flask, request, jsonify
+# import requests
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.route('/validate', methods=['POST'])
-def validate_place():
-    data = request.get_json()
-    place = data.get('place')
+# @app.route('/validate', methods=['POST'])
+# def validate_place():
+#     data = request.get_json()
+#     place = data.get('place')
 
-    if not place:
-        return jsonify({"error": "No place provided"}), 400
+#     if not place:
+#         return jsonify({"error": "No place provided"}), 400
 
-    try:
-        print(f"🔍 Validating place: {place}")
-        url = "https://en.wikipedia.org/w/api.php"
-        params = {
-            "action": "query",
-            "titles": place,
-            "format": "json"
-        }
+#     try:
+#         print(f"🔍 Validating place: {place}")
+#         url = "https://en.wikipedia.org/w/api.php"
+#         params = {
+#             "action": "query",
+#             "titles": place,
+#             "format": "json"
+#         }
 
-        response = requests.get(url, params=params)
-        data = response.json()
+#         response = requests.get(url, params=params)
+#         data = response.json()
 
-        pages = data.get("query", {}).get("pages", {})
-        page_id = next(iter(pages))
+#         pages = data.get("query", {}).get("pages", {})
+#         page_id = next(iter(pages))
 
-        valid = page_id != "-1"
+#         valid = page_id != "-1"
 
-        return jsonify({
-            "place": place,
-            "valid": valid,
-            "source": "Wikipedia"
-        })
+#         return jsonify({
+#             "place": place,
+#             "valid": valid,
+#             "source": "Wikipedia"
+#         })
 
-    except Exception as e:
-        print(f"❌ Exception occurred: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+#     except Exception as e:
+#         print(f"❌ Exception occurred: {str(e)}")
+#         return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(port=5001)
+# if __name__ == '__main__':
+#     app.run(port=5001)
