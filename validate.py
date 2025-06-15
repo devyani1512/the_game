@@ -1,10 +1,7 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import requests
-import os
 
 app = Flask(__name__)
-CORS(app)  # ✅ Allow requests from other domains (like your Node.js backend)
 
 @app.route('/validate', methods=['POST'])
 def validate_place():
@@ -23,7 +20,12 @@ def validate_place():
             "format": "json"
         }
 
-        response = requests.get(url, params=params)
+        # ✅ Add headers with a proper User-Agent
+        headers = {
+            "User-Agent": "AtlasGameValidator/1.0 (https://the-game-q9mr.onrender.com)"
+        }
+
+        response = requests.get(url, params=params, headers=headers)
         data = response.json()
 
         pages = data.get("query", {}).get("pages", {})
@@ -42,8 +44,7 @@ def validate_place():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # ✅ Required by Render
-    app.run(host='0.0.0.0', port=port)
+    app.run(port=5001)
 
 # from flask import Flask, request, jsonify
 # import undetected_chromedriver as uc
