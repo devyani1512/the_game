@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import Globe from 'react-globe.gl';
 
-const socket = io('http://localhost:3000');
+const socket = io('https://the-game-1.onrender.com');
 
 export default function GamePage() {
   const [placePins, setPlacePins] = useState([]);
