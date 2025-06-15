@@ -219,7 +219,7 @@ io.on('connection', socket => {
       const expectedLetter = session.currentLetter;
 
       // ✅ Await the validation response
-      const { data } = await axios.post('https://fur-python.onrender.com/validate', {
+      const { data } = await axios.post('https://fur-python-1.onrender.com/validate', {
         place: trimmedPlace
       });
 
