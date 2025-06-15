@@ -80,7 +80,7 @@ const App = () => {
 
   const handleCreate = async () => {
     try {
-      const res = await fetch("http://localhost:3000/create-session", {
+      const res = await fetch("https://the-game-q9mr.onrender.com/create-session", {
         method: "POST",
       });
       const data = await res.json();
