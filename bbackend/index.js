@@ -496,7 +496,7 @@ io.on('connection', socket => {
       const firstLetter = trimmedPlace[0].toUpperCase();
       const expectedLetter = session.currentLetter;
 
-const { data } = await axios.post('https://place-validator.onrender.com/validate', { place: trimmedPlace });
+const { data } = await axios.post('https://fur-python.onrender.com', { place: trimmedPlace });
 
       const alreadyUsed = session.usedPlaces.includes(trimmedPlace);
       const startsWrong = firstLetter !== expectedLetter;
