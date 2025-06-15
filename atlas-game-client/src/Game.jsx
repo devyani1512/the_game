@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io("https://the-game-1.onrender.com"); // Replace with env if needed
+const socket = io("https://the-game-q9mr.onrender.com"); // Replace with env if needed
 
 export default function Game({ sessionId, playerId }) {
   const [currentLetter, setCurrentLetter] = useState("");
