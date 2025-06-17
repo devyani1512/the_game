@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import requests
 
@@ -26,7 +25,7 @@ def validate_place():
         }
 
         headers = {
-            "User-Agent": "AtlasGameValidator/1.0 (https://your-game-url.com)"
+            "User-Agent": "AtlasGameValidator/1.0"
         }
 
         response = requests.get(url, params=params, headers=headers)
@@ -40,28 +39,27 @@ def validate_place():
 
         extract = pages[page_id].get("extract", "").lower()
 
-        # 👇 Manual keywords to identify places
-        place_keywords = [
-            "city", "country", "town", "village", "state", "province",
-            "district", "region", "territory", "capital", "island", "continent",
-            "municipality", "metropolitan", "county", "geographical", "mountain", "river"
+        # ✅ Look for keywords that suggest it's a geographical place
+        keywords = [
+            "city", "country", "town", "village", "state", "province", "district", "region",
+            "territory", "capital", "municipality", "island", "continent", "mountain", "river"
         ]
 
-        valid = any(keyword in extract for keyword in place_keywords)
+        valid = any(word in extract for word in keywords)
 
         return jsonify({
             "place": place,
             "valid": valid,
             "extract_snippet": extract[:200] + "...",
-            "source": "Wikipedia (Keyword Filter)"
+            "source": "Wikipedia"
         })
 
     except Exception as e:
-        print(f"❌ Exception occurred: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(port=5001)
+
 # from flask import Flask, request, jsonify
 # import requests
 
