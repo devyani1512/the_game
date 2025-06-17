@@ -38,18 +38,21 @@ def validate_place():
         if page_id == "-1":
             return jsonify({"place": place, "valid": False, "reason": "Page not found"})
 
-        full_extract = pages[page_id].get("extract", "").strip().lower()
-        first_line = full_extract.split('\n')[0]
+        full_extract = pages[page_id].get("extract", "").strip()
+        first_line = full_extract.split('\n')[0].lower()
 
-        # ✅ Match geographic keywords in first sentence only
+        # ✅ Match geographic keywords in the first sentence
         keywords = [
             "city", "country", "town", "village", "state", "province", "district", "region",
             "territory", "capital", "municipality", "island", "continent", "mountain", "river"
         ]
         valid = any(re.search(rf"\b{word}\b", first_line) for word in keywords)
 
-        # ❌ Filter known false matches (people, professions)
-        disqualifiers = ["emperor", "king", "president", "actor", "singer", "fictional", "was born", "writer"]
+        # ❌ Disqualify people, fictional characters, professions
+        disqualifiers = [
+            "emperor", "king", "queen", "president", "actor", "singer", "fictional",
+            "was born", "writer", "poet", "scientist", "politician", "general", "character", "novelist"
+        ]
         if any(term in first_line for term in disqualifiers):
             valid = False
 
@@ -65,6 +68,7 @@ def validate_place():
 
 if __name__ == '__main__':
     app.run(port=5001)
+
 
 
 # from flask import Flask, request, jsonify
