@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify
 import requests
 
@@ -13,16 +14,19 @@ def validate_place():
 
     try:
         print(f"🔍 Validating place: {place}")
+
         url = "https://en.wikipedia.org/w/api.php"
         params = {
             "action": "query",
             "titles": place,
-            "format": "json"
+            "format": "json",
+            "prop": "extracts",
+            "exintro": True,
+            "explaintext": True
         }
 
-        # ✅ Add headers with a proper User-Agent
         headers = {
-            "User-Agent": "AtlasGameValidator/1.0 (https://the-game-q9mr.onrender.com)"
+            "User-Agent": "AtlasGameValidator/1.0 (https://your-game-url.com)"
         }
 
         response = requests.get(url, params=params, headers=headers)
@@ -31,12 +35,25 @@ def validate_place():
         pages = data.get("query", {}).get("pages", {})
         page_id = next(iter(pages))
 
-        valid = page_id != "-1"
+        if page_id == "-1":
+            return jsonify({"place": place, "valid": False, "reason": "Page not found"})
+
+        extract = pages[page_id].get("extract", "").lower()
+
+        # 👇 Manual keywords to identify places
+        place_keywords = [
+            "city", "country", "town", "village", "state", "province",
+            "district", "region", "territory", "capital", "island", "continent",
+            "municipality", "metropolitan", "county", "geographical", "mountain", "river"
+        ]
+
+        valid = any(keyword in extract for keyword in place_keywords)
 
         return jsonify({
             "place": place,
             "valid": valid,
-            "source": "Wikipedia"
+            "extract_snippet": extract[:200] + "...",
+            "source": "Wikipedia (Keyword Filter)"
         })
 
     except Exception as e:
@@ -45,6 +62,53 @@ def validate_place():
 
 if __name__ == '__main__':
     app.run(port=5001)
+# from flask import Flask, request, jsonify
+# import requests
+
+# app = Flask(__name__)
+
+# @app.route('/validate', methods=['POST'])
+# def validate_place():
+#     data = request.get_json()
+#     place = data.get('place')
+
+#     if not place:
+#         return jsonify({"error": "No place provided"}), 400
+
+#     try:
+#         print(f"🔍 Validating place: {place}")
+#         url = "https://en.wikipedia.org/w/api.php"
+#         params = {
+#             "action": "query",
+#             "titles": place,
+#             "format": "json"
+#         }
+
+#         # ✅ Add headers with a proper User-Agent
+#         headers = {
+#             "User-Agent": "AtlasGameValidator/1.0 (https://the-game-q9mr.onrender.com)"
+#         }
+
+#         response = requests.get(url, params=params, headers=headers)
+#         data = response.json()
+
+#         pages = data.get("query", {}).get("pages", {})
+#         page_id = next(iter(pages))
+
+#         valid = page_id != "-1"
+
+#         return jsonify({
+#             "place": place,
+#             "valid": valid,
+#             "source": "Wikipedia"
+#         })
+
+#     except Exception as e:
+#         print(f"❌ Exception occurred: {str(e)}")
+#         return jsonify({"error": str(e)}), 500
+
+# if __name__ == '__main__':
+#     app.run(port=5001)
 
 # from flask import Flask, request, jsonify
 # import undetected_chromedriver as uc
