@@ -4,7 +4,7 @@ body, html, #root {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: #000010;
+  background-color: #000002;
   font-family: Arial, sans-serif;
   overflow: hidden;
 }
@@ -33,7 +33,7 @@ body, html, #root {
 .form-container {
   flex: 1;
   background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  color: rgb(207, 225, 239);
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -53,6 +53,9 @@ body, html, #root {
   flex-direction: column;
   gap: 0.5rem;
 }
+.input-row input{
+  background-color: #99a5d2
+}
 
 .input-row input,
 .input-row button {
@@ -64,7 +67,7 @@ body, html, #root {
 }
 
 .input-row button {
-  background-color: #4b72ff;
+  background-color: #1f3ca3;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -100,5 +103,7 @@ body, html, #root {
     width: 90%;
   }
 }
+
+
 
 
