@@ -38,9 +38,9 @@ export default function Game({ sessionId, playerId }) {
   return (
     <div>
       <h2>Atlas Game</h2>
-      <p>🧩 Starting Letter: {currentLetter}</p>
-      <p>🕹️ Current Player: {currentPlayer}</p>
-      <p>🧠 Your ID: {playerId}</p>
+      <p> Starting Letter: {currentLetter}</p>
+      <p> Current Player: {currentPlayer}</p>
+      <p> Your ID: {playerId}</p>
 
       {isMyTurn ? (
         <>
