@@ -31,26 +31,26 @@ const App = () => {
       setStatus(`🎮 Game started! Starting letter: ${currentLetter}`);
     });
 
-    socket.on("invalidCode", () => setStatus("❌ Invalid game code."));
+    socket.on("invalidCode", () => setStatus(" Invalid game code."));
 
     socket.on("playerJoined", (joinedPlayers) => {
       setPlayers(joinedPlayers);
-      setStatus(`👥 Players in lobby: ${joinedPlayers.join(", ")}`);
+      setStatus(` Players in lobby: ${joinedPlayers.join(", ")}`);
     });
 
     socket.on("placeResult", ({ player, place, valid, error }) => {
       if (valid) {
         setUsedPlaces((prev) => [...prev, place.toLowerCase()]);
-        setStatus(`✅ ${player} played: ${place}`);
+        setStatus(` ${player} played: ${place}`);
       } else {
-        setStatus(`❌ ${player} failed: ${place} (${error})`);
+        setStatus(` ${player} failed: ${place} (${error})`);
       }
     });
 
     socket.on("turnChanged", ({ nextPlayer }) => setCurrentPlayer(nextPlayer));
     socket.on("letterChanged", ({ newLetter }) => setCurrentLetter(newLetter));
     socket.on("playerPassed", ({ player, auto }) => {
-      setStatus(auto ? `⏱️ ${player} auto-passed` : `⏭️ ${player} passed`);
+      setStatus(auto ? ` ${player} auto-passed` : `⏭️ ${player} passed`);
     });
 
     socket.on("usedPlacesUpdate", (places) => {
@@ -86,30 +86,42 @@ const App = () => {
       const data = await res.json();
       if (data.success) {
         setGameCode(data.code);
-        setStatus(`✅ Created game with code: ${data.code}`);
+        setStatus(` Created game with code: ${data.code}`);
       } else {
-        setStatus("❌ Failed to create game session.");
+        setStatus(" Failed to create game session.");
       }
     } catch (err) {
       console.error(err);
-      setStatus("❌ Server error.");
+      setStatus(" Server error.");
     }
   };
 
   const handleJoin = () => {
     if (!playerName) {
-      setStatus("⚠️ Please enter your name.");
+      setStatus(" Please enter your name.");
       return;
     }
-    setStatus(`🔗 Joining game: ${gameCode}`);
+    setStatus(` Joining game: ${gameCode}`);
     socket.emit("join-game", { sessionId: gameCode, playerName });
   };
 
   return (
     <div className="app-container">
       <div className="globe-container">
-        <Globe globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg" />
+        {/* <Globe globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg" /> */}
+           <Globe
+  globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+  bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+  backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+  animateIn={true}
+  autoRotate={true}
+  autoRotateSpeed={0.3}
+  showAtmosphere={true}
+  atmosphereColor="lightskyblue"
+  atmosphereAltitude={0.15}
+/>
       </div>
+
 
       <div className="form-container">
         <h1>🌍 Atlas Game</h1>
@@ -123,7 +135,7 @@ const App = () => {
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
               />
-              <button onClick={handleCreate}>🎮 Create New Game</button>
+              <button onClick={handleCreate}> Create New Game</button>
             </div>
 
             <div className="input-row">
@@ -133,7 +145,7 @@ const App = () => {
                 value={gameCode}
                 onChange={(e) => setGameCode(e.target.value)}
               />
-              <button onClick={handleJoin}>🔗 Join Game</button>
+              <button onClick={handleJoin}> Join Game</button>
             </div>
 
             {players.length > 0 && (
@@ -169,3 +181,4 @@ const App = () => {
 };
 
 export default App;
+
