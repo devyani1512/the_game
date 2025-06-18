@@ -49,8 +49,8 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
   useEffect(() => {
     socket.on("placeResult", ({ player, place, valid, error }) => {
       const message = valid
-        ? `✅ ${player} played: ${place}`
-        : `❌ ${player} submitted an invalid place: ${place} (${error})`;
+        ? ` ${player} played: ${place}`
+        : ` ${player} submitted an invalid place: ${place} (${error})`;
       setLog((prev) => [message, ...prev]);
     });
 
@@ -61,11 +61,11 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
 
     socket.on("letterChanged", ({ newLetter }) => {
       setCurrentLetter(newLetter); // 🔤 Update current letter
-      setLog((prev) => [`🔤 New Letter: ${newLetter}`, ...prev]);
+      setLog((prev) => [` New Letter: ${newLetter}`, ...prev]);
     });
 
     socket.on("playerPassed", ({ player, auto }) => {
-      const msg = auto ? `⏰ ${player} auto-passed!` : `⏭️ ${player} passed!`;
+      const msg = auto ? ` ${player} auto-passed!` : `⏭ ${player} passed!`;
       setLog((prev) => [msg, ...prev]);
     });
 
@@ -82,7 +82,7 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
 
     const alreadyUsed = usedPlaces.includes(placeInput.toLowerCase());
     if (alreadyUsed) {
-      setLog((prev) => [`⚠️ "${placeInput}" was already used!`, ...prev]);
+      setLog((prev) => [` "${placeInput}" was already used!`, ...prev]);
       setPlaceInput("");
       return;
     }
@@ -104,11 +104,11 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
   return (
     <div className="p-4 max-w-xl mx-auto bg-zinc-900 text-white rounded-2xl shadow-xl">
       <p className="text-xl font-semibold mb-2">
-        🔠 Current Letter: <strong>{currentLetter}</strong>
+         Current Letter: <strong>{currentLetter}</strong>
       </p>
-      <p className="text-sm">🧠 You: <strong>{playerName}</strong></p>
-      <p className="text-sm">🕹️ Turn: <strong>{currentPlayer}</strong></p>
-      <p className="text-sm">⏳ Time Left: <strong>{Math.floor(timeLeft / 60)}m {timeLeft % 60}s</strong></p>
+      <p className="text-sm"> You: <strong>{playerName}</strong></p>
+      <p className="text-sm"> Turn: <strong>{currentPlayer}</strong></p>
+      <p className="text-sm"> Time Left: <strong>{Math.floor(timeLeft / 60)}m {timeLeft % 60}s</strong></p>
 
       {yourTurn ? (
         <div className="mt-4 space-y-2">
@@ -137,11 +137,11 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
           </div>
         </div>
       ) : (
-        <p className="mt-4 text-zinc-400">⌛ Waiting for opponent's turn...</p>
+        <p className="mt-4 text-zinc-400"> Waiting for opponent's turn...</p>
       )}
 
       <div className="mt-6">
-        <h4 className="text-lg font-bold mb-2">📜 Game Log:</h4>
+        <h4 className="text-lg font-bold mb-2"> Game Log:</h4>
         <ul className="space-y-1 text-sm max-h-48 overflow-y-auto bg-zinc-800 rounded p-2">
           {log.map((entry, idx) => (
             <li key={idx} className="text-zinc-300">{entry}</li>
@@ -153,3 +153,4 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
 };
 
 export default GameInterface;
+
