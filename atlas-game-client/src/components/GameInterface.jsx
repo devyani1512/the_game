@@ -1,43 +1,21 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import socket from "../socket";
-// Inside GameInterface.jsx
-const [gameEnded, setGameEnded] = useState(false);
-const [winnerName, setWinnerName] = useState("");
-const [endReason, setEndReason] = useState("");
 
-useEffect(() => {
-  const onGameOver = ({ loser, reason }) => {
-    setGameEnded(true);
-    setEndReason(reason);
-    const winner = playerName === loser ? "Opponent" : playerName;
-    setWinnerName(winner);
-    clearInterval(intervalRef.current);
-  };
-
-  socket.on("gameOver", onGameOver);
-  return () => socket.off("gameOver", onGameOver);
-}, [playerName]);
-
-if (gameEnded) {
-  return (
-    <div className="end-screen">
-      <h2>🏁 Game Over</h2>
-      <p>Reason: {endReason}</p>
-      <p>Winner: {winnerName}</p>
-    </div>
-  );
-}
 const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => {
   const [placeInput, setPlaceInput] = useState("");
   const [log, setLog] = useState([]);
   const [yourTurn, setYourTurn] = useState(false);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
-  const [currentLetter, setCurrentLetter] = useState("A"); // <-- this is now state
+  const [currentLetter, setCurrentLetter] = useState("A");
+
+  const [gameEnded, setGameEnded] = useState(false);
+  const [winnerName, setWinnerName] = useState("");
+  const [endReason, setEndReason] = useState("");
 
   const intervalRef = useRef(null);
   const timeRef = useRef(300);
 
+  // ⏱ Timer for the current turn
   useEffect(() => {
     const isYourTurn = currentPlayer === playerName;
     setYourTurn(isYourTurn);
@@ -59,6 +37,7 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
     return () => clearInterval(intervalRef.current);
   }, [currentPlayer, playerName, sessionId]);
 
+  // ⌛ Listen for timer updates from server
   useEffect(() => {
     socket.on("timerUpdate", (timeRemainingMap) => {
       const myTime = timeRemainingMap[socket.id];
@@ -73,6 +52,7 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
     };
   }, []);
 
+  // 🧠 Game events
   useEffect(() => {
     socket.on("placeResult", ({ player, place, valid, error }) => {
       const message = valid
@@ -83,11 +63,11 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
 
     socket.on("turnChanged", ({ nextPlayer, currentLetter }) => {
       setYourTurn(nextPlayer === playerName);
-      setCurrentLetter(currentLetter); // 🔤 Update on turn change
+      setCurrentLetter(currentLetter);
     });
 
     socket.on("letterChanged", ({ newLetter }) => {
-      setCurrentLetter(newLetter); // 🔤 Update current letter
+      setCurrentLetter(newLetter);
       setLog((prev) => [` New Letter: ${newLetter}`, ...prev]);
     });
 
@@ -104,6 +84,21 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
     };
   }, [playerName]);
 
+  // 🏁 Game Over Handler
+  useEffect(() => {
+    const onGameOver = ({ loser, reason }) => {
+      setGameEnded(true);
+      setEndReason(reason);
+      const winner = playerName === loser ? "Opponent" : playerName;
+      setWinnerName(winner);
+      clearInterval(intervalRef.current);
+    };
+
+    socket.on("gameOver", onGameOver);
+    return () => socket.off("gameOver", onGameOver);
+  }, [playerName]);
+
+  // 🎯 Submit a place
   const handleSubmit = () => {
     if (!placeInput) return;
 
@@ -128,6 +123,18 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
     socket.emit("pass", { sessionId });
   };
 
+  // 🧾 Show Game Over
+  if (gameEnded) {
+    return (
+      <div className="p-6 max-w-xl mx-auto bg-zinc-900 text-white rounded-2xl shadow-xl text-center">
+        <h2 className="text-2xl font-bold mb-4">🏁 Game Over!</h2>
+        <p className="text-lg mb-2">Reason: <strong>{endReason}</strong></p>
+        <p className="text-lg">Winner: <strong>{winnerName}</strong></p>
+      </div>
+    );
+  }
+
+  // 🎮 Default Game UI
   return (
     <div className="p-4 max-w-xl mx-auto bg-zinc-900 text-white rounded-2xl shadow-xl">
       <p className="text-xl font-semibold mb-2">
@@ -146,7 +153,7 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
             onChange={(e) => setPlaceInput(e.target.value)}
             className="w-full p-2 rounded bg-zinc-800 border border-zinc-600 placeholder-zinc-400 focus:outline-none"
           />
-          <br></br>
+          <br />
           <div className="flex gap-2">
             <button
               onClick={handleSubmit}
@@ -154,7 +161,7 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
             >
               Submit
             </button>
-            
+
             <button
               onClick={handlePass}
               className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded shadow"
