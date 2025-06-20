@@ -54,7 +54,8 @@ body, html, #root {
   gap: 0.5rem;
 }
 .input-row input{
-  background-color: #99a5d2
+  background-color: #000000;
+    
 }
 
 .input-row input,
@@ -62,19 +63,23 @@ body, html, #root {
   width: 100%;
   padding: 0.6rem;
   font-size: 1rem;
+  
   border-radius: 6px;
   border: none;
 }
 
 .input-row button {
-  background-color: #1f3ca3;
+  background-color: #000000;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .input-row button:hover {
-  background-color: #2f54d3;
+  background-color: #525252;
+}
+.input-row input:hover {
+  background-color: #000000;
 }
 
 .status {
