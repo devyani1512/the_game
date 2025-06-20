@@ -15,9 +15,9 @@ const App = () => {
   const [currentLetter, setCurrentLetter] = useState("");
   const [currentPlayer, setCurrentPlayer] = useState("");
   const [playerName, setPlayerName] = useState("");
-  const [players, setPlayers] = useState([]);
-  const [usedPlaces, setUsedPlaces] = useState([]);
-
+  const [players, setPlayers] = useState([]);//array
+  const [usedPlaces, setUsedPlaces] = useState([]);//array
+//is the game over not working because it is in app.jsx but it should be in gameinterface.jsx
   useEffect(() => {
     socket.on("gameStart", ({ currentLetter, currentPlayer, players }) => {
       setGameStarted(true);
@@ -124,7 +124,7 @@ const App = () => {
 
 
       <div className="form-container">
-        <h1>🌍 Atlas Game</h1>
+        <h1>🍁 Maple</h1>
 
         {!gameStarted ? (
           <>
@@ -156,7 +156,7 @@ const App = () => {
             )}
             <p>{status}</p>
           </>
-        ) : gameEnded ? (
+        ) : gameEnded ? (//why are we checking game ended here?
           <>
             <h2>🏁 Game Over!</h2>
             <p>{status}</p>
@@ -181,4 +181,5 @@ const App = () => {
 };
 
 export default App;
+
 
