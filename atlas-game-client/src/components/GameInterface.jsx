@@ -1,6 +1,33 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import socket from "../socket";
+// Inside GameInterface.jsx
+const [gameEnded, setGameEnded] = useState(false);
+const [winnerName, setWinnerName] = useState("");
+const [endReason, setEndReason] = useState("");
 
+useEffect(() => {
+  const onGameOver = ({ loser, reason }) => {
+    setGameEnded(true);
+    setEndReason(reason);
+    const winner = playerName === loser ? "Opponent" : playerName;
+    setWinnerName(winner);
+    clearInterval(intervalRef.current);
+  };
+
+  socket.on("gameOver", onGameOver);
+  return () => socket.off("gameOver", onGameOver);
+}, [playerName]);
+
+if (gameEnded) {
+  return (
+    <div className="end-screen">
+      <h2>🏁 Game Over</h2>
+      <p>Reason: {endReason}</p>
+      <p>Winner: {winnerName}</p>
+    </div>
+  );
+}
 const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => {
   const [placeInput, setPlaceInput] = useState("");
   const [log, setLog] = useState([]);
