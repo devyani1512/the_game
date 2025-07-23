@@ -195,20 +195,17 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
   const [placeInput, setPlaceInput] = useState("");
   const [log, setLog] = useState([]);
   const [yourTurn, setYourTurn] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(300);
   const [currentLetter, setCurrentLetter] = useState("A");
-
   const [gameEnded, setGameEnded] = useState(false);
   const [winnerName, setWinnerName] = useState("");
   const [endReason, setEndReason] = useState("");
-
   const intervalRef = useRef(null);
   const timeRef = useRef(300);
 
   useEffect(() => {
     const isYourTurn = currentPlayer === playerName;
     setYourTurn(isYourTurn);
-
     if (isYourTurn) {
       intervalRef.current = setInterval(() => {
         timeRef.current -= 1;
@@ -221,7 +218,6 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
     } else {
       clearInterval(intervalRef.current);
     }
-
     return () => clearInterval(intervalRef.current);
   }, [currentPlayer, playerName, sessionId]);
 
@@ -233,7 +229,6 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
         setTimeLeft(myTime);
       }
     });
-
     return () => {
       socket.off("timerUpdate");
     };
@@ -285,21 +280,17 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
 
   const handleSubmit = () => {
     if (!placeInput) return;
-
     const alreadyUsed = usedPlaces.includes(placeInput.toLowerCase());
     if (alreadyUsed) {
       setLog((prev) => [` "${placeInput}" was already used!`, ...prev]);
       setPlaceInput("");
       return;
     }
-
     socket.emit("submitPlace", { sessionId, place: placeInput });
-
     if (300 - timeRef.current <= 10) {
       timeRef.current += 5;
       setTimeLeft(timeRef.current);
     }
-
     setPlaceInput("");
   };
 
@@ -307,104 +298,80 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
     socket.emit("pass", { sessionId });
   };
 
+  const boxStyle = {
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    color: "rgb(207, 225, 239)",
+    padding: "2rem",
+    borderRadius: "1rem",
+    margin: "1rem auto",
+    width: "100%",
+    maxWidth: "600px",
+    fontFamily: "Arial, sans-serif",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "0.6rem",
+    fontSize: "1rem",
+    backgroundColor: "#000000",
+    color: "aliceblue",
+    border: "none",
+    borderRadius: "6px",
+    marginBottom: "0.5rem"
+  };
+
+  const buttonStyle = {
+    backgroundColor: "#000000",
+    color: "white",
+    cursor: "pointer",
+    padding: "0.6rem",
+    fontSize: "1rem",
+    border: "none",
+    borderRadius: "6px",
+    width: "100%",
+    transition: "background-color 0.2s"
+  };
+
   if (gameEnded) {
     return (
-      <div style={{
-        padding: "1.5rem",
-        maxWidth: "600px",
-        margin: "0 auto",
-        backgroundColor: "#0a0a0a",
-        color: "white",
-        borderRadius: "1rem",
-        textAlign: "center",
-        boxShadow: "0 0 20px rgba(0,0,0,0.7)"
-      }}>
-        <h2 style={{ fontSize: "1.75rem", fontWeight: "bold", marginBottom: "1rem" }}>🏁 Game Over!</h2>
-        <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>Reason: <strong>{endReason}</strong></p>
-        <p style={{ fontSize: "1rem" }}>Winner: <strong>{winnerName}</strong></p>
+      <div style={boxStyle}>
+        <h2 style={{ marginBottom: "1rem" }}>🏁 Game Over!</h2>
+        <p>Reason: <strong>{endReason}</strong></p>
+        <p>Winner: <strong>{winnerName}</strong></p>
       </div>
     );
   }
 
   return (
-    <div style={{
-      padding: "1rem",
-      maxWidth: "600px",
-      margin: "0 auto",
-      backgroundColor: "#0a0a0a",
-      color: "#dce5ed",
-      borderRadius: "1rem",
-      boxShadow: "0 0 20px rgba(0,0,0,0.7)"
-    }}>
-      <p style={{ fontSize: "1.25rem", fontWeight: "600" }}>Current Letter: <strong>{currentLetter}</strong></p>
+    <div style={boxStyle}>
+      <p>Current Letter: <strong>{currentLetter}</strong></p>
       <p>You: <strong>{playerName}</strong></p>
       <p>Turn: <strong>{currentPlayer}</strong></p>
       <p>Time Left: <strong>{Math.floor(timeLeft / 60)}m {timeLeft % 60}s</strong></p>
 
       {yourTurn ? (
-        <div style={{ marginTop: "1rem" }}>
+        <div>
           <input
             type="text"
             value={placeInput}
             placeholder={`Enter a place starting with ${currentLetter}`}
             onChange={(e) => setPlaceInput(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              borderRadius: "8px",
-              backgroundColor: "#000",
-              color: "aliceblue",
-              border: "1px solid #444",
-              marginBottom: "0.5rem"
-            }}
+            style={inputStyle}
           />
           <div style={{ display: "flex", gap: "0.5rem" }}>
-            <button
-              onClick={handleSubmit}
-              style={{
-                flex: 1,
-                padding: "0.5rem",
-                backgroundColor: "#1d4ed8",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer"
-              }}
-            >
-              Submit
-            </button>
-            <button
-              onClick={handlePass}
-              style={{
-                flex: 1,
-                padding: "0.5rem",
-                backgroundColor: "#dc2626",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer"
-              }}
-            >
-              Pass
-            </button>
+            <button onClick={handleSubmit} style={buttonStyle}>Submit</button>
+            <button onClick={handlePass} style={buttonStyle}>Pass</button>
           </div>
         </div>
       ) : (
-        <p style={{ marginTop: "1rem", color: "#999" }}>Waiting for opponent's turn...</p>
+        <p>Waiting for opponent's turn...</p>
       )}
 
       <div style={{ marginTop: "1.5rem" }}>
-        <h4 style={{ fontSize: "1.1rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Game Log:</h4>
-        <ul style={{
-          maxHeight: "10rem",
-          overflowY: "auto",
-          backgroundColor: "#111",
-          padding: "0.75rem",
-          borderRadius: "0.5rem",
-          listStyle: "none"
-        }}>
+        <h4 style={{ marginBottom: "0.5rem" }}>Game Log:</h4>
+        <ul style={{ maxHeight: "150px", overflowY: "auto", backgroundColor: "#000", padding: "1rem", borderRadius: "6px" }}>
           {log.map((entry, idx) => (
-            <li key={idx} style={{ marginBottom: "0.3rem" }}>{entry}</li>
+            <li key={idx}>{entry}</li>
           ))}
         </ul>
       </div>
@@ -413,5 +380,3 @@ const GameInterface = ({ sessionId, playerName, currentPlayer, usedPlaces }) => 
 };
 
 export default GameInterface;
-
-
