@@ -42,14 +42,14 @@ def validate_place():
         first_line = full_extract.split('\n')[0].lower()
         full_text = full_extract.lower()
 
-        # ✅ Match geographic keywords in the first sentence
+        
         keywords = [
             "city", "country", "town", "village", "state", "province", "district", "region",
             "territory", "capital", "municipality", "island", "continent", "mountain", "river"
         ]
         valid = any(re.search(rf"\b{word}\b", first_line) for word in keywords)
 
-        # ❌ Disqualify if disqualifying terms appear anywhere
+        
         disqualifiers = [
             "emperor", "king", "queen", "president", "actor", "singer", "fictional",
             "was born", "writer", "poet", "scientist", "politician", "general", "character", "novelist"
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 #         return jsonify({"error": "No place provided"}), 400
 
 #     try:
-#         print(f"🔍 Validating place: {place}")
+#         print(f" Validating place: {place}")
 #         url = "https://en.wikipedia.org/w/api.php"
 #         params = {
 #             "action": "query",
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 #             "format": "json"
 #         }
 
-#         # ✅ Add headers with a proper User-Agent
+#         #  Add headers with a proper User-Agent
 #         headers = {
 #             "User-Agent": "AtlasGameValidator/1.0 (https://the-game-q9mr.onrender.com)"
 #         }
@@ -113,7 +113,7 @@ if __name__ == '__main__':
 #         })
 
 #     except Exception as e:
-#         print(f"❌ Exception occurred: {str(e)}")
+#         print(f" Exception occurred: {str(e)}")
 #         return jsonify({"error": str(e)}), 500
 
 # if __name__ == '__main__':
@@ -136,10 +136,10 @@ if __name__ == '__main__':
 
 #     driver = None
 #     try:
-#         print(f"🔍 Validating place: {place}")
+#         print(f" Validating place: {place}")
 
 #         options = uc.ChromeOptions()
-#         options.add_argument("--headless=new")  # ✅ safer than options.headless = True
+#         options.add_argument("--headless=new")  #  safer than options.headless = True
 #         options.add_argument("--disable-blink-features=AutomationControlled")
 #         options.add_argument("--no-sandbox")
 #         options.add_argument("--disable-dev-shm-usage")
@@ -147,7 +147,7 @@ if __name__ == '__main__':
 #         driver = uc.Chrome(options=options)
 
 #         search_url = f"https://en.wikipedia.org/wiki/Special:Search?search={place}&go=Go"
-#         print(f"🌐 Navigating to: {search_url}")
+#         print(f" Navigating to: {search_url}")
 #         driver.get(search_url)
 
 #         time.sleep(3)  # Allow page to load fully
@@ -157,7 +157,7 @@ if __name__ == '__main__':
 #         current_url = driver.current_url
 #         title = driver.title.lower()
 
-#         print(f"🕵️ Current URL: {current_url}, Title: {title}")
+#         print(f" Current URL: {current_url}, Title: {title}")
 
 #         valid = not ("search" in title or "/w/index.php?" in current_url)
 
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 #         })
 
 #     except Exception as e:
-#         print(f"❌ Exception occurred: {str(e)}")
+#         print(f" Exception occurred: {str(e)}")
 #         return jsonify({"error": str(e)}), 500
 
 #     finally:
@@ -176,7 +176,7 @@ if __name__ == '__main__':
 #             try:
 #                 driver.quit()
 #             except Exception as e:
-#                 print(f"⚠️ Error closing driver: {e}")
+#                 print(f" Error closing driver: {e}")
 
 # if __name__ == '__main__':
 #     app.run(port=5001)
@@ -194,7 +194,7 @@ if __name__ == '__main__':
 #         return jsonify({"error": "No place provided"}), 400
 
 #     try:
-#         print(f"🔍 Validating place: {place}")
+#         print(f" Validating place: {place}")
 #         url = "https://en.wikipedia.org/w/api.php"
 #         params = {
 #             "action": "query",
@@ -217,7 +217,7 @@ if __name__ == '__main__':
 #         })
 
 #     except Exception as e:
-#         print(f"❌ Exception occurred: {str(e)}")
+#         print(f"Exception occurred: {str(e)}")
 #         return jsonify({"error": str(e)}), 500
 
 # if __name__ == '__main__':
